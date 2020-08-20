@@ -31,9 +31,15 @@ contract("Crud", () => {
 		assert(false);
 	});
 
-	// 	it("Should delete the user", async () => {
-	// 	await crud.destroy(1);
-	// 	let user = await crud.read(1);
-	// 	assert.equal(user[1], null);
-	// });
+	it("Should delete the user", async () => {
+		await crud.destroy(1);
+		try {
+			await crud.read(1);
+		} catch (e) {
+			assert(e.message.includes("User does not exist!"));
+			return;
+		}
+
+		assert(false);
+	});
 });
