@@ -34,6 +34,8 @@ const initApp = () => {
   // get DOM elements
   let $create = document.getElementById("create");
   let $createResult = document.getElementById("create-result");
+  let $read = document.getElementById("read");
+  let $readResult = document.getElementById("read-result");
   // add accounts
   let accounts = [];
   web3.eth.getAccounts().then((_accounts) => (accounts = _accounts));
@@ -50,6 +52,22 @@ const initApp = () => {
       })
       .catch(() => {
         $createResult.innerHTML = `Unable to create new user due to an error`;
+      });
+  });
+
+  // get user by id
+  $read.addEventListener("submit", (evt) => {
+    evt.preventDefault();
+    let id = evt.target.element[0].value;
+    // call read method on the smart contract
+    crud.methods
+      .read(id)
+      .call()
+      .then((result) => {
+        $readResult.innerHTML = `Id: ${result[0]}, User: ${result[1]}`;
+      })
+      .catch(() => {
+        $readResult.innerHTML = `There was an error reading the results`;
       });
   });
 };
