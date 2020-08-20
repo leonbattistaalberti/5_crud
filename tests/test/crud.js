@@ -42,4 +42,14 @@ contract("Crud", () => {
 
 		assert(false);
 	});
+
+	it("Should not delete non-existent user", async () => {
+		try {
+			await crud.destroy(10);
+		} catch (e) {
+			assert(e.message.includes("User does not exist!"));
+			return;
+		}
+		assert(false);
+	});
 });
