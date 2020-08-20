@@ -13,4 +13,10 @@ contract("Crud", () => {
 		assert.equal(user[0].toNumber(), 1);
 		assert.equal(user[1], "John");
 	});
+
+	it("Should update the user", async () => {
+		await crud.update(1, "James");
+		let user = await crud.read(1);
+		assert.equal(user[1], "James");
+	});
 });
