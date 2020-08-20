@@ -19,7 +19,7 @@ contract("Crud", () => {
 		let user = await crud.read(1);
 		assert.equal(user[1], "James");
 	});
-
+	// test error
 	it("Should not update a non-existent user", async () => {
 		try {
 			await crud.update(10, "James");
@@ -42,7 +42,7 @@ contract("Crud", () => {
 
 		assert(false);
 	});
-
+	// test error
 	it("Should not delete non-existent user", async () => {
 		try {
 			await crud.destroy(10);
