@@ -42,13 +42,14 @@ const initApp = () => {
   const $deleteResult = document.getElementById("delete-result");
 
   // add accounts
-  const accounts = [];
+  let accounts = [];
   web3.eth.getAccounts().then((_accounts) => (accounts = _accounts));
 
   // get data from form
   $create.addEventListener("submit", (evt) => {
     evt.preventDefault();
-    const name = evt.target.element[0].value;
+    let name = evt.target.elements[0].value;
+
     // call create function in the smart contract
     crud.methods
       .create(name)
@@ -56,15 +57,16 @@ const initApp = () => {
       .then(() => {
         $createResult.innerHTML = `New user ${name} was added to the contract`;
       })
-      .catch(() => {
+      .catch((err) => {
         $createResult.innerHTML = `Unable to create new user due to an error`;
+        console.error(err);
       });
   });
 
   // get user by id
   $read.addEventListener("submit", (evt) => {
     evt.preventDefault();
-    const id = evt.target.element[0].value;
+    const id = evt.target.elements[0].value;
     // call read method on the smart contract
     crud.methods
       .read(id)
@@ -72,16 +74,17 @@ const initApp = () => {
       .then((result) => {
         $readResult.innerHTML = `Id: ${result[0]}, User: ${result[1]}`;
       })
-      .catch(() => {
+      .catch((err) => {
         $readResult.innerHTML = `There was an error reading the results`;
+        console.error(err);
       });
   });
 
   // update user
   $edit.addEventListener("submit", (evt) => {
     evt.preventDefault();
-    const id = evt.target.element[0].value;
-    const name = evt.target.element[1].value;
+    const id = evt.target.elements[0].value;
+    const name = evt.target.elements[1].value;
     // call update method on the smart contract
     crud.methods
       .update(id, name)
@@ -89,29 +92,28 @@ const initApp = () => {
       .then(() => {
         $editResult.innerHTML = `Changed user ${id} to ${name}`;
       })
-      .catch(() => {
+      .catch((err) => {
         $editResult.innerHTML = `Failed to update the User`;
+        console.error(err);
+      });
+  });
+  // delete user
+  $delete.addEventListener("submit", (evt) => {
+    evt.preventDefault();
+    const id = evt.target.elements[0].value;
+    // call delete method on the smart contract
+    crud.methods
+      .destroy(id)
+      .send({ from: accounts[0] })
+      .then(() => {
+        $deleteResult.innerHTML = `Deleted user ${id}`;
+      })
+      .catch((err) => {
+        $deleteResult.innerHTML = `Could not delete user ${id}`;
+        console.error(err);
       });
   });
 };
-
-// delet user
-$delete.addEventListener("submit", () => {
-  evt.preventDefault();
-  const id = evt.target.element[0].value;
-
-  // call delete method on the smart contract
-  crud.methods
-    .destroy(id)
-    .send({ from: accounts[0] })
-    .then(() => {
-      $deleteResult.innerHTML = `Deleted user ${id}`;
-    })
-    .catch(() => {
-      $deleteResult.innerHTML = `Could not delete user ${id}`;
-    });
-});
-
 // load page
 document.addEventListener("DOMContentLoaded", () => {
   initWeb3()
