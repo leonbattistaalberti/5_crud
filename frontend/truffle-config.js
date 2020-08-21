@@ -11,6 +11,7 @@ module.exports = {
 					secrets.seed,
 					`https://ropsten.infura.io/v3/${secrets.projecId}`
 				),
+			network_id: 3,
 		},
 	},
 };
