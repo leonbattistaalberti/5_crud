@@ -1,9 +1,16 @@
-// https://ropsten.infura.io/v3/6bba58da3a8a4350bf5062cb2461753d
+const fs = require("fs");
+const HDWalletProvider = require("truffle-hdwallet-provider");
+
+const secrets = JSON.parse(fs.readFileSync(".secrets").toString.trim());
 
 module.exports = {
 	network: {
 		ropsten: {
-			provider: () => {},
+			provider: () =>
+				new HDWalletProvider(
+					secrets.seed,
+					`https://ropsten.infura.io/v3/${secrets.projecId}`
+				),
 		},
 	},
 };
