@@ -38,14 +38,17 @@ const initApp = () => {
   const $readResult = document.getElementById("read-result");
   const $edit = document.getElementById("edit");
   const $editResult = document.getElementById("edit-result");
+  const $delete = document.getElementById("delete");
+  const $deleteResult = document.getElementById("delete-result");
+
   // add accounts
-  let accounts = [];
+  const accounts = [];
   web3.eth.getAccounts().then((_accounts) => (accounts = _accounts));
 
   // get data from form
   $create.addEventListener("submit", (evt) => {
     evt.preventDefault();
-    let name = evt.target.element[0].value;
+    const name = evt.target.element[0].value;
     // call create function in the smart contract
     crud.methods
       .create(name)
@@ -61,7 +64,7 @@ const initApp = () => {
   // get user by id
   $read.addEventListener("submit", (evt) => {
     evt.preventDefault();
-    let id = evt.target.element[0].value;
+    const id = evt.target.element[0].value;
     // call read method on the smart contract
     crud.methods
       .read(id)
@@ -75,10 +78,10 @@ const initApp = () => {
   });
 
   // update user
-  $edit.addEventListener("edit", (evt) => {
+  $edit.addEventListener("submit", (evt) => {
     evt.preventDefault();
-    let id = evt.target.element[0].value;
-    let name = evt.target.element[1].value;
+    const id = evt.target.element[0].value;
+    const name = evt.target.element[1].value;
     // call update method on the smart contract
     crud.methods
       .update(id, name)
@@ -91,6 +94,23 @@ const initApp = () => {
       });
   });
 };
+
+// delet user
+$delete.addEventListener("submit", () => {
+  evt.preventDefault();
+  const id = evt.target.element[0].value;
+
+  // call delete method on the smart contract
+  crud.methods
+    .destroy(id)
+    .send({ from: accounts[0] })
+    .then(() => {
+      $deleteResult.innerHTML = `Deleted user ${id}`;
+    })
+    .catch(() => {
+      $deleteResult.innerHTML = `Could not delete user ${id}`;
+    });
+});
 
 // load page
 document.addEventListener("DOMContentLoaded", () => {
