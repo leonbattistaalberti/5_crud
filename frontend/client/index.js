@@ -32,13 +32,16 @@ const initContract = () => {
 
 const initApp = () => {
   // get DOM elements
-  let $create = document.getElementById("create");
-  let $createResult = document.getElementById("create-result");
-  let $read = document.getElementById("read");
-  let $readResult = document.getElementById("read-result");
+  const $create = document.getElementById("create");
+  const $createResult = document.getElementById("create-result");
+  const $read = document.getElementById("read");
+  const $readResult = document.getElementById("read-result");
+  const $edit = document.getElementById("edit");
+  const $editResult = document.getElementById("edit-result");
   // add accounts
   let accounts = [];
   web3.eth.getAccounts().then((_accounts) => (accounts = _accounts));
+
   // get data from form
   $create.addEventListener("submit", (evt) => {
     evt.preventDefault();
@@ -70,8 +73,26 @@ const initApp = () => {
         $readResult.innerHTML = `There was an error reading the results`;
       });
   });
+
+  // update user
+  $edit.addEventListener("edit", (evt) => {
+    evt.preventDefault();
+    let id = evt.target.element[0].value;
+    let name = evt.target.element[1].value;
+    // call update method on the smart contract
+    crud.methods
+      .update(id, name)
+      .send({ from: accounts[0] })
+      .then(() => {
+        $editResult.innerHTML = `Changed user ${id} to ${name}`;
+      })
+      .catch(() => {
+        $editResult.innerHTML = `Failed to update the User`;
+      });
+  });
 };
 
+// load page
 document.addEventListener("DOMContentLoaded", () => {
   initWeb3()
     .then((_web3) => {
